@@ -3,16 +3,18 @@ package ru.webanimal.test49_mvvm_dagger.ui.details
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import ru.webanimal.test49_mvvm_dagger.MainActivity
 import ru.webanimal.test49_mvvm_dagger.R
 import ru.webanimal.test49_mvvm_dagger.appComponent
 import ru.webanimal.test49_mvvm_dagger.ui.Router
+import ru.webanimal.test49_mvvm_dagger.ui.ViewModelFactory
+import javax.inject.Inject
 
 class DetailsFragment : Fragment(), View.OnClickListener {
 	
@@ -21,9 +23,12 @@ class DetailsFragment : Fragment(), View.OnClickListener {
 	
 	private var router: Router? = null
 	
+	@Inject
+	lateinit var viewModelFactory: ViewModelFactory
 	private lateinit var viewModel: DetailsViewModel
 	
 	override fun onAttach(context: Context) {
+		appComponent().inject(this)
 		super.onAttach(context)
 		
 		if (context is MainActivity) {
@@ -78,7 +83,7 @@ class DetailsFragment : Fragment(), View.OnClickListener {
 	}
 	
 	private fun setupViewModel() {
-		viewModel = ViewModelProvider(this, appComponent().viewModelFactory())
+		viewModel = ViewModelProvider(this, viewModelFactory)
 			.get(DetailsViewModel::class.java)
 		
 		viewModel.data.observe(this.viewLifecycleOwner) {

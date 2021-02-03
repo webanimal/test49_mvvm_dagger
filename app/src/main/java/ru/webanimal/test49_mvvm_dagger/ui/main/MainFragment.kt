@@ -3,20 +3,23 @@ package ru.webanimal.test49_mvvm_dagger.ui.main
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import ru.webanimal.test49_mvvm_dagger.MainActivity
 import ru.webanimal.test49_mvvm_dagger.R
 import ru.webanimal.test49_mvvm_dagger.appComponent
 import ru.webanimal.test49_mvvm_dagger.ui.Router
+import ru.webanimal.test49_mvvm_dagger.ui.ViewModelFactory
+import javax.inject.Inject
 
-// https://developer.android.com/training/dependency-injection/dagger-android?hl=ur
-// https://developer.android.com/codelabs/android-dagger?index=..%2F..index#0
-// https://medium.com/@shashankmohabia/dagger-android-with-mvvm-dependency-injection-for-android-3a7e33ad1013
+// docs:	https://developer.android.com/training/dependency-injection/dagger-android?hl=ur
+// codelab:	https://developer.android.com/codelabs/android-dagger?index=..%2F..index#0
+// sample:	https://medium.com/@shashankmohabia/dagger-android-with-mvvm-dependency-injection-for-android-3a7e33ad1013
+// academy:	https://www.youtube.com/watch?v=TUKrtxOydmw
 class MainFragment : Fragment(), View.OnClickListener {
 	
 	private var tvMessage: TextView? = null
@@ -24,9 +27,13 @@ class MainFragment : Fragment(), View.OnClickListener {
 	
 	private var router: Router? = null
 	
+	@Inject
+	lateinit var viewModelFactory: ViewModelFactory
 	private lateinit var viewModel: MainViewModel
 	
 	override fun onAttach(context: Context) {
+		appComponent().inject(this)
+		
 		super.onAttach(context)
 		
 		if (context is MainActivity) {
@@ -81,7 +88,7 @@ class MainFragment : Fragment(), View.OnClickListener {
 	}
 	
 	private fun setupViewModel() {
-		viewModel = ViewModelProvider(this, appComponent().viewModelFactory())
+		viewModel = ViewModelProvider(this, viewModelFactory)
 			.get(MainViewModel::class.java)
 		
 		viewModel.data.observe(this.viewLifecycleOwner) {
