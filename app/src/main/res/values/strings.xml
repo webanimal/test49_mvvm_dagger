@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="app_name">MVVM_DI</string>
+
+    <string name="main_initial_text">Hello!</string>
+    <string name="main_to_details_button">To details</string>
+
+    <string name="details_initial_text">Initial details</string>
+    <string name="details_back_button">Back to main</string>
+
+</resources>
